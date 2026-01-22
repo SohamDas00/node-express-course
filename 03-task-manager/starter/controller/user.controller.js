@@ -1,13 +1,39 @@
-export const userFetch=(req,res)=>{
-    res.status(200).send("All users fetched")
+import task from "../models/task.models.js"
+
+//Get all user
+export const userFetch=async(req,res)=>{
+    try {
+        const user=await task.find();
+        res.status(200).json({user})
+    } catch (error) {
+        res.status(400).json({message:error.message})
+    }
 }
 
-export const userPost=(req,res)=>{
-    res.status(201).json(req.body)
+//Create user
+export const userPost=async (req,res)=>{
+    try {
+        const {name,completed}=req.body;
+        const newUser= new task({
+            name,
+            completed
+        })
+        const saveUser=await newUser.save();
+        res.status(201).json({
+            message: 'user created successfully',
+            task: saveUser
+        })   
+    } catch (error) {
+        console.log("Error in creating user ",error.message); 
+        res.status(400).json({message:error.message})   
+    }
 }
 
+//Get specific user
 export const userFetchOne=(req,res)=>{
-    res.status(200).json({name:req.params.id})
+    const id=req.params.id;
+
+    //findone
 }
 
 export const userUpdate=(req,res)=>{
