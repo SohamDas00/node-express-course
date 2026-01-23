@@ -21,7 +21,7 @@ export const userPost=async (req,res)=>{
         const saveUser=await newUser.save();
         res.status(201).json({
             message: 'user created successfully',
-            task: saveUser
+            User: saveUser
         })   
     } catch (error) {
         console.log("Error in creating user ",error.message); 
@@ -30,15 +30,33 @@ export const userPost=async (req,res)=>{
 }
 
 //Get specific user
-export const userFetchOne=(req,res)=>{
-    const id=req.params.id;
-
-    //findone
+export const userFetchOne=async(req,res)=>{
+    try {
+        const id=req.params.id;
+        const specificUser=await task.findById(id)
+        if(!specificUser) res.status(404).json(`No user found! with id ${id}`)
+        res.status(200).send(specificUser)
+    } catch (error) {
+        res.status(400).json({message:error.message})
+    }
 }
 
+//Update user
 export const userUpdate=(req,res)=>{
-    res.status(200).send(`Successfully Update user ${req.params.id}`)
+
 }
-export const userDelete=(req,res)=>{
-    res.status(200).send(`Successfully Delete user ${req.params.id}`)
+
+//Delete user
+export const userDelete=async(req,res)=>{
+    try {
+        const id=req.params.id
+        const user=await task.findByIdAndDelete(id)
+        if(!user) res.status(404).send(`No user find with id ${id}`)
+        res.status(200).json({
+            message:"user successfully deleted",
+            user:user
+        })
+    } catch (error) {
+        res.status(400).json({message:error.message})
+    }
 }
