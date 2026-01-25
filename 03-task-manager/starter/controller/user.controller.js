@@ -1,62 +1,82 @@
 import task from "../models/task.models.js"
 
-//Get all user
-export const userFetch=async(req,res)=>{
-    try {
-        const user=await task.find();
-        res.status(200).json({user})
-    } catch (error) {
-        res.status(400).json({message:error.message})
-    }
+// GET all tasks
+export const userFetch = async (req, res) => {
+  try {
+    const tasks = await task.find()
+    res.status(200).json({ tasks })
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
 }
 
-//Create user
-export const userPost=async (req,res)=>{
-    try {
-        const {name,completed}=req.body;
-        const newUser= new task({
-            name,
-            completed
-        })
-        const saveUser=await newUser.save();
-        res.status(201).json({
-            message: 'user created successfully',
-            User: saveUser
-        })   
-    } catch (error) {
-        console.log("Error in creating user ",error.message); 
-        res.status(400).json({message:error.message})   
-    }
+// CREATE task
+export const userPost = async (req, res) => {
+  try {
+    const { name, completed } = req.body
+
+    const newTask = new task({
+      name,
+      completed
+    })
+
+    const savedTask = await newTask.save()
+
+    res.status(201).json({ task: savedTask })
+  } catch (error) {
+    res.status(400).json({ message: error.message })
+  }
 }
 
-//Get specific user
-export const userFetchOne=async(req,res)=>{
-    try {
-        const id=req.params.id;
-        const specificUser=await task.findById(id)
-        if(!specificUser) res.status(404).json(`No user found! with id ${id}`)
-        res.status(200).send(specificUser)
-    } catch (error) {
-        res.status(400).json({message:error.message})
+// GET single task
+export const userFetchOne = async (req, res) => {
+  try {
+    const { id } = req.params
+
+    const taskData = await task.findById(id)
+    if (!taskData) {
+      return res.status(404).json({ message: `No task found with id ${id}` })
     }
+
+    res.status(200).json({ task: taskData })
+  } catch (error) {
+    res.status(400).json({ message: error.message })
+  }
 }
 
-//Update user
-export const userUpdate=(req,res)=>{
+// UPDATE task
+export const userUpdate = async (req, res) => {
+  try {
+    const { id } = req.params
 
+    const updatedTask = await task.findByIdAndUpdate(
+      id,
+      { $set: req.body },
+      { new: true, runValidators: true }
+    )
+
+    if (!updatedTask) {
+      return res.status(404).json({ message: `No task found with id ${id}` })
+    }
+
+    res.status(200).json({ task: updatedTask })
+  } catch (error) {
+    res.status(400).json({ message: error.message })
+  }
 }
 
-//Delete user
-export const userDelete=async(req,res)=>{
-    try {
-        const id=req.params.id
-        const user=await task.findByIdAndDelete(id)
-        if(!user) res.status(404).send(`No user find with id ${id}`)
-        res.status(200).json({
-            message:"user successfully deleted",
-            user:user
-        })
-    } catch (error) {
-        res.status(400).json({message:error.message})
+// DELETE task
+export const userDelete = async (req, res) => {
+  try {
+    const { id } = req.params
+
+    const deletedTask = await task.findByIdAndDelete(id)
+    if (!deletedTask) {
+      return res.status(404).json({ message: `No task found with id ${id}` })
     }
+
+    res.status(200).json({ task: deletedTask })
+  } catch (error) {
+    res.status(400).json({ message: error.message })
+  }
 }
