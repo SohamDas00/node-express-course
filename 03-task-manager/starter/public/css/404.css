@@ -1,0 +1,29 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.not-found {
+  background: white;
+  padding: 30px 40px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.not-found h1 {
+  color: #ff4d4f;
+}
+
+.not-found a {
+  display: inline-block;
+  margin-top: 15px;
+  color: white;
+  background: #4f46e5;
+  padding: 8px 16px;
+  border-radius: 4px;
+  text-decoration: none;
+}
