@@ -4,19 +4,18 @@ dotenv.config();
 import express from "express"
 import { router } from "./routes/user.routes.js";
 import mongoose from "mongoose"
+import notFound from "./middleware/notfound.js"
 
 const app=express();
 const DB_URI=process.env.DB_connect;
 
+app.use(express.static('./public'))
 app.use(express.json())
 
 const port=process.env.PORT;
 
-app.get('/',(req,res)=>{
-    res.send("Home page")
-})
-
-app.use('/api/v1/users',router)
+app.use('/api/v1/tasks',router)
+app.use(notFound)
 
 const CONNECT_DbServer=async()=>{
     try {
